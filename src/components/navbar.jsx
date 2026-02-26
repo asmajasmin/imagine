@@ -1,11 +1,15 @@
 import { NavLink } from "react-router";
 import { Button } from "@/components/ui/button";
-import { UserButton, useAuth } from "@clerk/clerk-react";
+// import { UserButton, useAuth } from "@clerk/clerk-react";
 import { useTheme } from "@/components/theme-provider";
 import { Sun, Moon } from "lucide-react";
+import { useUser } from "@/hooks/use-user";
 
 const Navbar = () => {
-  const { isLoaded, isSignedIn } = useAuth();
+  // const { isLoaded, isSignedIn } = useAuth();
+  const { isLoading, user } = useUser();
+  const isLoaded = !isLoading;
+  const isSignedIn = !!user;
 
   const { theme, setTheme } = useTheme();
 
@@ -30,6 +34,22 @@ const Navbar = () => {
       {!isLoaded && <div>Loading...</div>}
 
       {isLoaded && isSignedIn && (
+        <div className="flex gap-4">
+          <Button variant="icon" onClick={toggleTheme}>
+            <span className="sr-only">Toggle Theme</span>
+            {theme === "light" ? (
+              <Moon className="size-4" />
+            ) : (
+              <Sun className="size-4" />
+            )}
+          </Button>
+          <Button variant="secondary">
+            <NavLink to="#">Profile</NavLink>
+          </Button>
+          <Button variant="destructive">Logout</Button>
+        </div>
+      )}
+      {/* {isLoaded && isSignedIn && (
         <UserButton
           userProfileMode="navigation"
           userProfileUrl="/auth/profile"
@@ -49,7 +69,7 @@ const Navbar = () => {
             />
           </UserButton.MenuItems>
         </UserButton>
-      )}
+      )} */}
 
       {isLoaded && !isSignedIn && (
         <div className="flex gap-4">
